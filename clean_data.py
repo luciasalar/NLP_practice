@@ -37,20 +37,30 @@ def preprocess(sent):
 # 	return ' '.join(english)
 swl_data = pd.read_csv('user_all_status_swl2.csv')
 
-# swl_data_s = swl_data[:10]
+# drop column 
 swl_data = swl_data.drop(swl_data.columns[[0]],axis = 1)
 # print (swl_data)
 swl_data = swl_data.groupby(['user_id'])
 sample = swl_data['status']
+# print(type(sample))
+
 
 for x in sample:
-	# x = str(x)
+	x = str(x)
 	new_text = preprocess(x)
-	# print(new_text)
+
+	# for i in new_text.split():
+	fdist = FreqDist(new_text.split())
+	vocab = fdist.keys()
+	# print(vocab)	
+
+	print(fdist["he"])
 
 
-for i in sample:
-	print (i)
+
+# long_words = [w for w in new_text.split() if len(new_text.split()) > 10]
+# print(long_words)
+
 
 # def frequency(text):
 # 	for i in text:
@@ -62,7 +72,7 @@ for i in sample:
 
 
 
-# print(frequency(new_text))
+
 
 
 
