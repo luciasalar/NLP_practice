@@ -78,15 +78,49 @@ def freq_list(raw_text):
 		x = str(x)
 		new = preprocess(x)
 		new_text.append(new)
-		fdist_list = []
-		for i in new_text:
-			fdist = FreqDist(i.split())
-			fdist_list.append(fdist)
-			print (fdist_list)
+	fdist_list = []
+	for i in new_text:
+		fdist = FreqDist(i.split())
+		fdist_list.append(fdist)
+
+	return fdist_list
 
 			#return fdist_list
 
 print(freq_list(sample))
+
+# def bigram(raw_text):
+# 	new_text =[]
+# 	for x in sample:
+# 		x = str(x)
+# 		new = preprocess(x)
+# 		new_text.append(new)
+# 		bigram_text = []
+# 		for i in new_text:
+# 			bi = nltk.bigrams(i.split())
+# 			bigram_text.append(bi)
+# 		return bigram_text
+
+		
+# print (bigram(sample))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #print(sample)
 
