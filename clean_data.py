@@ -71,13 +71,18 @@ def modal_count(raw_text):
 
 
 def freq_plot(raw_text):
+	
 	for x in raw_text:
+		new_text =[]
 		x = str(x)
-		new_text = preprocess(x)
-		fdist = FreqDist(new_text.split())
-		#return fdist.plot()
-		vocab = fdist.keys()
-		return new_text
+		new = preprocess(x)
+		new_text = new_text.append(new)
+	return new_text
+		# for i in all_text:
+		# 	fdist = FreqDist(all_text.split())
+		# #return fdist.plot()
+		# 	vocab = fdist.keys()
+		# return vocab
 
 print(freq_plot(sample))
 
