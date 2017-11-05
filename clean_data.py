@@ -44,17 +44,51 @@ swl_data = swl_data.groupby(['user_id'])
 sample = swl_data['status']
 # print(type(sample))
 
+def word_count(raw_text):
+	for x in sample:
+		x = str(x)
+		new_text = preprocess(x)
+		fdist = FreqDist(new_text.split())
+		vocab = fdist.keys()
+		print(fdist["he"])
 
-for x in sample:
-	x = str(x)
-	new_text = preprocess(x)
+#print(word_count(sample))
 
-	# for i in new_text.split():
-	fdist = FreqDist(new_text.split())
-	vocab = fdist.keys()
-	# print(vocab)	
 
-	print(fdist["he"])
+
+# count modal verbs
+
+def modal_count(raw_text):
+	for x in raw_text:
+		x = str(x)
+		new_text = preprocess(x)
+		fdist = FreqDist(new_text.split())
+		modals = ['can']
+		for m in modals:
+			print (m + ':', fdist[m])
+
+#print(modal_count(sample))
+
+
+def freq_plot(raw_text):
+	for x in raw_text:
+		x = str(x)
+		new_text = preprocess(x)
+		fdist = FreqDist(new_text.split())
+		#return fdist.plot()
+		vocab = fdist.keys()
+		return new_text
+
+print(freq_plot(sample))
+
+#print(sample)
+
+
+# for x in sample:
+# 	x = str(x)
+# 	new_text = preprocess(x)
+# 	print(new_text)
+
 
 
 
