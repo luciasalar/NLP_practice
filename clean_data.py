@@ -59,9 +59,11 @@ def word_count(raw_text):
 # count modal verbs
 
 def modal_count(raw_text):
+	new_text =[]
 	for x in raw_text:
 		x = str(x)
-		new_text = preprocess(x)
+		new = preprocess(x)
+		new_text.append(new)
 		fdist = FreqDist(new_text.split())
 		modals = ['can']
 		for m in modals:
@@ -70,21 +72,21 @@ def modal_count(raw_text):
 #print(modal_count(sample))
 
 
-def freq_plot(raw_text):
-	
+def freq_list(raw_text):
+	new_text =[]
 	for x in raw_text:
-		new_text =[]
 		x = str(x)
 		new = preprocess(x)
-		new_text = new_text.append(new)
-	return new_text
-		# for i in all_text:
-		# 	fdist = FreqDist(all_text.split())
-		# #return fdist.plot()
-		# 	vocab = fdist.keys()
-		# return vocab
+		new_text.append(new)
+		fdist_list = []
+		for i in new_text:
+			fdist = FreqDist(i.split())
+			fdist_list.append(fdist)
+			print (fdist_list)
 
-print(freq_plot(sample))
+			#return fdist_list
+
+print(freq_list(sample))
 
 #print(sample)
 
@@ -97,54 +99,9 @@ print(freq_plot(sample))
 
 
 
-# long_words = [w for w in new_text.split() if len(new_text.split()) > 10]
-# print(long_words)
-
-
-# def frequency(text):
-# 	for i in text:
-# 		fdist = FreqDist(i)
-
-# 		# vocab = fdist.keys()
-# 	return fdist
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# print (filter_non_engilsh(new_text))
-
-# word frequency
-# def word_frequency (count,total):
-# 	return 100* count/total
-
-
-# print(word_frequency(new_text.count("he"),len(new_text)))
-
-# frequency distribution
 
 
 
