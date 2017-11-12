@@ -64,12 +64,38 @@ freqdsts[1]
 clean1 = swl_data_test['status'].apply((lambda x: re.sub(r'[^\w\s]','',str(x))))
 
 
+swl_data_test['status'].apply((lambda x: TextBlob(str(x))))
+
+blobz = swl_data_test['status'].apply((lambda x: TextBlob(str(x))))   
+for i in blobz:
+    print(i.words)
+
+
 ###word cloud
 
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 
 wordcloud = WordCloud().generate(str(swl_data_test['status']))
+
+
+####bigram
+a = nltk.bigrams(str(swl_data_test['status']).split())
+
+
+
+####textblob
+
+from textblob import TextBlob
+swl_data_test['blobz'] = swl_data_test['status'].apply((lambda x: TextBlob(str(x))))
+
+def english(blob):
+    for i in blob:
+        swl_data_test['language'] = i.detect_language
+        return swl_data_test['language']
+
+
+print(english(swl_data_test['blobz']))
 
 
 
@@ -138,6 +164,11 @@ print(freq_list(sample))
         
 # print (bigram(sample))
 
+extract_bigram_feats(document, bigrams).items()
+
+
+sun_bigrams = [b for b in nltk.bigrams(cleaned_words) if (b[0] == 'sun' or b[1] == 'sun') \
+  and b[0] not in stops and b[1] not in stops]
 
 
 
