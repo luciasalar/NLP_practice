@@ -88,17 +88,32 @@ a = nltk.bigrams(str(swl_data_test['status']).split())
 
 from textblob import TextBlob
 swl_data_test['blobz'] = swl_data_test['status'].apply((lambda x: TextBlob(str(x))))
+swl_data_test['language'] = swl_data_test['blobz'].apply((lambda x: x.detect_language()))
 
 def english(blob):
+
     for i in blob:
-        swl_data_test['language'] = i.detect_language
+        swl_data_test['language'] = i.detect_language()
         return swl_data_test['language']
 
 
 print(english(swl_data_test['blobz']))
 
 
+#difference between method and function 
 
+ class Fooo:
+     def __init__(self):
+        self.Value = 0
+        self.Text = "foo"
+     def whatAmI(self):
+        print(self.Text)
+     staticFN(texttopri):
+        print(texttopri)
+
+
+Fooo.staticFN('dsadasdsadasdas')     #call function
+a.whatAmI()     #call method
 
 #######
 
