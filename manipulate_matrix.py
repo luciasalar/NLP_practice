@@ -77,15 +77,17 @@ result5['status'] = result5['status'].apply(lambda x: preprocess(x))
 # remove non-English 
 
 
-def remove_eng():
+def remove_eng(sent):
 
-	words = str(sent).split()
-	en_words = set(nltk.corpus.words.words())
-	new_words = []
+    words = str(sent).split()
+    en_words = set(nltk.corpus.words.words())
+    new_words = []
 
-	for w in words:
-		if w.lower in en_words:
-			new_words.append(w)
-	return ' '.join(new_words)
+    for w in words:
+        if w.lower in en_words:
+            new_words.append(w)
+    return ' '.join(new_words)
+
+
 
 result5['status'] = result5['status'].apply(lambda x: remove_eng(x))
