@@ -75,12 +75,12 @@ result5['status'] = result5['status'].apply(lambda x: preprocess(x))
 
 
 # remove non-English 
+en_words = set(nltk.corpus.words.words())
 
-
-def remove_eng(sent):
+def remove_eng(sent, en_words):
 
     words = str(sent).split()
-    en_words = set(nltk.corpus.words.words())
+   
     new_words = []
 
     for w in words:
