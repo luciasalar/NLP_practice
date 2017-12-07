@@ -91,3 +91,25 @@ def remove_eng(sent, en_words):
 
 
 result5['status'] = result5['status'].apply(lambda x: remove_eng(x))
+
+
+
+df['sentiment'] = df['status'].apply(lambda x: TextBlob(x))
+
+
+def find_close_w(sent):
+
+    words = str(sent).split()
+   
+    new_words = []
+
+    for w in words:
+        s = edit_distance(w, "shine")
+        new_words.append(s)
+    return new_words
+
+df['status'].apply(lambda x: find_close_w(x))
+
+
+
+

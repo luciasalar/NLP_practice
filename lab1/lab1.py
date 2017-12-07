@@ -29,7 +29,7 @@ def ex1(doc_name):
     total_words = len(doc_words)
 
     # Find the total number of DISTINCT words in the speech
-    total_distinct_words = Counter(doc_words)
+    total_distinct_words = len(set(doc_words))
 
     # Return the word counts
     return (total_words, total_distinct_words)
@@ -38,8 +38,8 @@ def ex1(doc_name):
 ### Uncomment to test exercise 1
 speech_name = '2009-Obama.txt'
 (tokens,types) = ex1(speech_name)
-#print "Total words in %s: %s"%(speech_name,tokens)
-#print "Total distinct words in %s: %s"%(speech_name,types)
+print ("Total words in %s: %s"%(speech_name,tokens))
+print ("Total distinct words in %s: %s"%(speech_name,types))
 
 
 
@@ -52,19 +52,23 @@ def ex2(doc_name):
     doc_words = inaugural.words(doc_name)
 
     # Construct a list that contains the word lengths for each DISTINCT word in the document
-    #distinct_word_lengths = 
+    list =[]
+    for i in doc_words:
+        list.append(len(set(i)))
+
+    distinct_word_lengths = list
 
     # Find the average word length
-    #avg_word_length =
+    avg_word_length = sum(list)/len(set(doc_words))
 
     # Return the average word length of the document
     return avg_word_length
 
 
 ### Uncomment to test exercise 2 
-#speech_name = '2009-Obama.txt'
-#result2 = ex2(speech_name)
-#print "Average word length for %s: %s"%(speech_name,result2)
+speech_name = '2009-Obama.txt'
+result2 = ex2(speech_name)
+print ("Average word length for %s: %s"%(speech_name,result2))
 
 
 #################### EXERCISE 3 ####################
