@@ -54,19 +54,21 @@ def ex1(genre,tagset):
   tagged_words = brown.tagged_words(categories= genre, tagset=tagset)
   
   # TODO: build a list of the tags associated with each word
-  #tags =
-  
+  tags = list(tag for (word,tag)  in tagged_words)
+
+
   # TODO: using the above list compute the Frequency Distribution of tags in the corpus
   # hint: use nltk.FreqDist()
-  #tagsFDist =
-  
+  tagsFDist = nltk.FreqDist(tags)
+
   # TODO: retrieve the total number of tags in the tagset
-  #number_of_tags =
+  number_of_tags = sum(tagsFDist.values())
   
   #TODO: retrieve the top 10 most frequent tags
-  #top_tags =
+  top_tags = tagsFDist. most_common(10)
   return (number_of_tags,top_tags)
 
+result = ex1('news',None)
 
 
 def test_ex1():
