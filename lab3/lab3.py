@@ -5,6 +5,7 @@ from nltk.corpus import brown
 
 # module for training a Hidden Markov Model and tagging sequences
 from nltk.tag.hmm import HiddenMarkovModelTagger
+from nltk.tag import hmm
 
 # module for computing a Conditional Frequency Distribution
 from nltk.probability import ConditionalFreqDist
@@ -72,24 +73,24 @@ result = ex1('news',None)
 
 
 def test_ex1():
-  print "Tag FreqDist for news:"
-  print ex1('news',None)
+  print ("Tag FreqDist for news:")
+  print (ex1('news',None))
 
-  print "Tag FreqDist for science_fiction:"
-  print ex1('science_fiction',None)
+  print ("Tag FreqDist for science_fiction:")
+  print (ex1('science_fiction',None))
 
   # Do the same thing for a different tagset: Universal
 
-  print "Tag FreqDist for news with Universal tagset:"
-  print ex1('news','universal')
+  print ("Tag FreqDist for news with Universal tagset:")
+  print (ex1('news','universal'))
 
-  print "Tag FreqDist for science_fiction with Universal tagset:"
-  print ex1('science_fiction','universal')
+  print ("Tag FreqDist for science_fiction with Universal tagset:")
+  print (ex1('science_fiction','universal'))
 
 ### Uncomment to test exerise 1
 # Let's look at the top tags for different genre and tagsets
 #  and observe the differences
-#test_ex1()
+test_ex1()
 
 ############# EXERCISE 2 #################
 # Solution for exercise 2
@@ -98,6 +99,8 @@ def test_ex1():
 
 # hint: use the help on HiddenMarkovModelTagger to find out how to train, tag and evaluate the HMM tagger
 def ex2(sentence, size):
+
+  #The number of entries in the table used by this tagger to map from contexts to tags.
   
   tagged_sentences = brown.tagged_sents(categories= 'news')
   
@@ -108,13 +111,14 @@ def ex2(sentence, size):
   test_data = tagged_sentences[:100]
 
   # TODO: train a HiddenMarkovModelTagger, using the train() method
-  #tagger =
+  tagger = hmm.HiddenMarkovModelTagger.train(train_data,test_data)
+  
 
   # TODO: using the hmm tagger tag the sentence
-  #hmm_tagged_sentence =
-  
+  hmm_tagged_sentence = tagger.tag(sentence)
+
   # TODO: using the hmm tagger evaluate on the test data
-  #eres =
+  eres = tagger.evaluate(test_data)
 
   return (tagger, hmm_tagged_sentence,eres)
 
@@ -123,16 +127,16 @@ def test_ex2():
   tagged_sentences = brown.tagged_sents(categories= 'news')
   words = [tp[0] for tp in tagged_sentences[42]]
   (tagger, hmm_tagged_sentence, eres ) = ex2(words,500)
-  print "Sentenced tagged with nltk.HiddenMarkovModelTagger:"
-  print hmm_tagged_sentence
-  print "Eval score:"
-  print eres
+  print ("Sentenced tagged with nltk.HiddenMarkovModelTagger:")
+  print (hmm_tagged_sentence)
+  print ("Eval score:")
+  print (eres)
 
   (tagger, hmm_tagged_sentence, eres ) = ex2(words,3000)
-  print "Sentenced tagged with nltk.HiddenMarkovModelTagger:"
-  print hmm_tagged_sentence
-  print "Eval score:"
-  print eres
+  print ("Sentenced tagged with nltk.HiddenMarkovModelTagger:")
+  print (hmm_tagged_sentence)
+  print ("Eval score:")
+  print (eres)
 
 ### Uncomment to test exerise 2
 #Look at the tagged sentence and the accuracy of the tagger. How does the size of the training set affect the accuracy?

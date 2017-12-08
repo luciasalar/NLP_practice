@@ -1,0 +1,229 @@
+Help on class HiddenMarkovModelTagger in module nltk.tag.hmm:
+
+class HHiiddddeennMMaarrkkoovvMMooddeellTTaaggggeerr(nltk.tag.api.TaggerI)
+ |  Hidden Markov model class, a generative model for labelling sequence data.
+ |  These models define the joint probability of a sequence of symbols and
+ |  their labels (state transitions) as the product of the starting state
+ |  probability, the probability of each state transition, and the probability
+ |  of each observation being generated from each state. This is described in
+ |  more detail in the module documentation.
+ |  
+ |  This implementation is based on the HMM description in Chapter 8, Huang,
+ |  Acero and Hon, Spoken Language Processing and includes an extension for
+ |  training shallow HMM parsers or specialized HMMs as in Molina et.
+ |  al, 2002.  A specialized HMM modifies training data by applying a
+ |  specialization function to create a new training set that is more
+ |  appropriate for sequential tagging with an HMM.  A typical use case is
+ |  chunking.
+ |  
+ |  :param symbols: the set of output symbols (alphabet)
+ |  :type symbols: seq of any
+ |  :param states: a set of states representing state space
+ |  :type states: seq of any
+ |  :param transitions: transition probabilities; Pr(s_i | s_j) is the
+ |      probability of transition from state i given the model is in
+ |      state_j
+ |  :type transitions: ConditionalProbDistI
+ |  :param outputs: output probabilities; Pr(o_k | s_i) is the probability
+ |      of emitting symbol k when entering state i
+ |  :type outputs: ConditionalProbDistI
+ |  :param priors: initial state distribution; Pr(s_i) is the probability
+ |      of starting in state i
+ |  :type priors: ProbDistI
+ |  :param transform: an optional function for transforming training
+ |      instances, defaults to the identity function.
+ |  :type transform: callable
+ |  
+ |  Method resolution order:
+ |      HiddenMarkovModelTagger
+ |      nltk.tag.api.TaggerI
+ |      builtins.object
+ |  
+ |  Methods defined here:
+ |  
+ |  ____iinniitt____(self, symbols, states, transitions, outputs, priors, transform=<function _identity at 0x7f6f90def7b8>)
+ |      Initialize self.  See help(type(self)) for accurate signature.
+ |  
+ |  ____rreepprr____(self)
+ |      Return repr(self).
+ |  
+ |  ____uunniiccooddee____ = __str__(self, /)
+ |      Return str(self).
+ |  
+ |  bbeesstt__ppaatthh(self, unlabeled_sequence)
+ |      Returns the state sequence of the optimal (most probable) path through
+ |      the HMM. Uses the Viterbi algorithm to calculate this part by dynamic
+ |      programming.
+ |      
+ |      :return: the state sequence
+ |      :rtype: sequence of any
+ |      :param unlabeled_sequence: the sequence of unlabeled symbols
+ |      :type unlabeled_sequence: list
+ |  
+ |  bbeesstt__ppaatthh__ssiimmppllee(self, unlabeled_sequence)
+ |      Returns the state sequence of the optimal (most probable) path through
+ |      the HMM. Uses the Viterbi algorithm to calculate this part by dynamic
+ |      programming.  This uses a simple, direct method, and is included for
+ |      teaching purposes.
+ |      
+ |      :return: the state sequence
+ |      :rtype: sequence of any
+ |      :param unlabeled_sequence: the sequence of unlabeled symbols
+ |      :type unlabeled_sequence: list
+ |  
+ |  eennttrrooppyy(self, unlabeled_sequence)
+ |      Returns the entropy over labellings of the given sequence. This is
+ |      given by::
+ |      
+ |          H(O) = - sum_S Pr(S | O) log Pr(S | O)
+ |      
+ |      where the summation ranges over all state sequences, S. Let
+ |      *Z = Pr(O) = sum_S Pr(S, O)}* where the summation ranges over all state
+ |      sequences and O is the observation sequence. As such the entropy can
+ |      be re-expressed as::
+ |      
+ |          H = - sum_S Pr(S | O) log [ Pr(S, O) / Z ]
+ |          = log Z - sum_S Pr(S | O) log Pr(S, 0)
+ |          = log Z - sum_S Pr(S | O) [ log Pr(S_0) + sum_t Pr(S_t | S_{t-1}) + sum_t Pr(O_t | S_t) ]
+ |      
+ |      The order of summation for the log terms can be flipped, allowing
+ |      dynamic programming to be used to calculate the entropy. Specifically,
+ |      we use the forward and backward probabilities (alpha, beta) giving::
+ |      
+ |          H = log Z - sum_s0 alpha_0(s0) beta_0(s0) / Z * log Pr(s0)
+ |          + sum_t,si,sj alpha_t(si) Pr(sj | si) Pr(O_t+1 | sj) beta_t(sj) / Z * log Pr(sj | si)
+ |          + sum_t,st alpha_t(st) beta_t(st) / Z * log Pr(O_t | st)
+ |      
+ |      This simply uses alpha and beta to find the probabilities of partial
+ |      sequences, constrained to include the given state(s) at some point in
+ |      time.
+ |  
+ |  lloogg__pprroobbaabbiilliittyy(self, sequence)
+ |      Returns the log-probability of the given symbol sequence. If the
+ |      sequence is labelled, then returns the joint log-probability of the
+ |      symbol, state sequence. Otherwise, uses the forward algorithm to find
+ |      the log-probability over all label sequences.
+ |      
+ |      :return: the log-probability of the sequence
+ |      :rtype: float
+ |      :param sequence: the sequence of symbols which must contain the TEXT
+ |          property, and optionally the TAG property
+ |      :type sequence:  Token
+ |  
+ |  ppooiinntt__eennttrrooppyy(self, unlabeled_sequence)
+ |      Returns the pointwise entropy over the possible states at each
+ |      position in the chain, given the observation sequence.
+ |  
+ |  pprroobbaabbiilliittyy(self, sequence)
+ |      Returns the probability of the given symbol sequence. If the sequence
+ |      is labelled, then returns the joint probability of the symbol, state
+ |      sequence. Otherwise, uses the forward algorithm to find the
+ |      probability over all label sequences.
+ |      
+ |      :return: the probability of the sequence
+ |      :rtype: float
+ |      :param sequence: the sequence of symbols which must contain the TEXT
+ |          property, and optionally the TAG property
+ |      :type sequence:  Token
+ |  
+ |  rraannddoomm__ssaammppllee(self, rng, length)
+ |      Randomly sample the HMM to generate a sentence of a given length. This
+ |      samples the prior distribution then the observation distribution and
+ |      transition distribution for each subsequent observation and state.
+ |      This will mostly generate unintelligible garbage, but can provide some
+ |      amusement.
+ |      
+ |      :return:        the randomly created state/observation sequence,
+ |                      generated according to the HMM's probability
+ |                      distributions. The SUBTOKENS have TEXT and TAG
+ |                      properties containing the observation and state
+ |                      respectively.
+ |      :rtype:         list
+ |      :param rng:     random number generator
+ |      :type rng:      Random (or any object with a random() method)
+ |      :param length:  desired output length
+ |      :type length:   int
+ |  
+ |  rreesseett__ccaacchhee(self)
+ |  
+ |  ttaagg(self, unlabeled_sequence)
+ |      Tags the sequence with the highest probability state sequence. This
+ |      uses the best_path method to find the Viterbi path.
+ |      
+ |      :return: a labelled sequence of symbols
+ |      :rtype: list
+ |      :param unlabeled_sequence: the sequence of unlabeled symbols
+ |      :type unlabeled_sequence: list
+ |  
+ |  tteesstt(self, test_sequence, verbose=False, **kwargs)
+ |      Tests the HiddenMarkovModelTagger instance.
+ |      
+ |      :param test_sequence: a sequence of labeled test instances
+ |      :type test_sequence: list(list)
+ |      :param verbose: boolean flag indicating whether training should be
+ |          verbose or include printed output
+ |      :type verbose: bool
+ |  
+ |  uunniiccooddee__rreepprr = __repr__(self)
+ |  
+ |  ----------------------------------------------------------------------
+ |  Class methods defined here:
+ |  
+ |  ttrraaiinn(labeled_sequence, test_sequence=None, unlabeled_sequence=None, **kwargs) from abc.ABCMeta
+ |      Train a new HiddenMarkovModelTagger using the given labeled and
+ |      unlabeled training instances. Testing will be performed if test
+ |      instances are provided.
+ |      
+ |      :return: a hidden markov model tagger
+ |      :rtype: HiddenMarkovModelTagger
+ |      :param labeled_sequence: a sequence of labeled training instances,
+ |          i.e. a list of sentences represented as tuples
+ |      :type labeled_sequence: list(list)
+ |      :param test_sequence: a sequence of labeled test instances
+ |      :type test_sequence: list(list)
+ |      :param unlabeled_sequence: a sequence of unlabeled training instances,
+ |          i.e. a list of sentences represented as words
+ |      :type unlabeled_sequence: list(list)
+ |      :param transform: an optional function for transforming training
+ |          instances, defaults to the identity function, see ``transform()``
+ |      :type transform: function
+ |      :param estimator: an optional function or class that maps a
+ |          condition's frequency distribution to its probability
+ |          distribution, defaults to a Lidstone distribution with gamma = 0.1
+ |      :type estimator: class or function
+ |      :param verbose: boolean flag indicating whether training should be
+ |          verbose or include printed output
+ |      :type verbose: bool
+ |      :param max_iterations: number of Baum-Welch interations to perform
+ |      :type max_iterations: int
+ |  
+ |  ----------------------------------------------------------------------
+ |  Data and other attributes defined here:
+ |  
+ |  ____aabbssttrraaccttmmeetthhooddss____ = frozenset()
+ |  
+ |  ----------------------------------------------------------------------
+ |  Methods inherited from nltk.tag.api.TaggerI:
+ |  
+ |  eevvaalluuaattee(self, gold)
+ |      Score the accuracy of the tagger against the gold standard.
+ |      Strip the tags from the gold standard text, retag it using
+ |      the tagger, then compute the accuracy score.
+ |      
+ |      :type gold: list(list(tuple(str, str)))
+ |      :param gold: The list of tagged sentences to score the tagger on.
+ |      :rtype: float
+ |  
+ |  ttaagg__sseennttss(self, sentences)
+ |      Apply ``self.tag()`` to each element of *sentences*.  I.e.:
+ |      
+ |          return [self.tag(sent) for sent in sentences]
+ |  
+ |  ----------------------------------------------------------------------
+ |  Data descriptors inherited from nltk.tag.api.TaggerI:
+ |  
+ |  ____ddiicctt____
+ |      dictionary for instance variables (if defined)
+ |  
+ |  ____wweeaakkrreeff____
+ |      list of weak references to the object (if defined)
