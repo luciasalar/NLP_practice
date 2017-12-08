@@ -158,7 +158,9 @@ def ex3(tagged_words):
   # TODO: prepare the data
   # the data object should be a list of tuples of conditions and observations
   # in our case the tuples will be of the form (tag,word) where words are lowercased
-  #data =
+
+  data = tuple([w for w in tagged_words])
+
 
   # TODO: compute a Conditional Frequency Distribution for words given their tags using our data
   #emission_FD =
