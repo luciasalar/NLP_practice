@@ -81,6 +81,7 @@ from nltk.corpus import gutenberg
 
 # Import NLTK's NgramModel module (for building language models)
 # It has been removed from standard NLTK, so we access it in a special package installation
+import sys
 sys.path.extend(['/group/ltg/projects/fnlp', '/group/ltg/projects/fnlp/packages_2.6'])
 from nltk import NgramModel
 from nltk import compat
@@ -179,15 +180,15 @@ def ex4(doc_name, n):
     words = [w.lower() for w in gutenberg.words(doc_name)]
 
     # Build the language model using the nltk.MLEProbDist estimator 
-    est = lambda fdist, bins: LidstoneProbDist(fdist, 0.2)
-    lm = NgramModel(3,words,estimator=est)
+    #est = lambda fdist, bins: LidstoneProbDist(fdist, 0.2)
+    lm = NgramModel(n,words)
     
     # Return the language model (we'll use it in exercise 5)
     return lm
 
 
 ### Uncomment to test exercise 4
-result4 = ex4('austen-sense.txt',2)
+result4 = ex4('austen-sense.txt',3)
 #print "Sense and Sensibility bigram language model built"
 
 
@@ -199,19 +200,69 @@ result4 = ex4('austen-sense.txt',2)
 # Output: p (float)
 def ex5(lm,word,context):
     # Compute the probability for the word given the context
-    #p = 
+    p = lm.prob(word, context)
 
     # Return the probability
     return p
 
 
 ### Uncomment to test exercise 5
-#result5a = ex5(result4,'for',['reason'])
-#print "Probability of \'reason\' followed by \'for\': %s"%result5a
-#result5b = ex5(result4,'end',['the'])
+result5a = ex5(result4,'for',['reason'])
+print ("Probability of \'reason\' followed by \'for\': %s"%result5a)
+result5b = ex5(result4,'end',['the'])
 #print "Probability of \'the\' followed by \'end\': %s"%result5b
-#result5c = ex5(result4,'the',['end'])
-#print "Probability of \'end\' followed by \'the\': %s"%result5c
+result5c = ex5(result4,'the',['end'])
+print ("Probability of \'end\' followed by \'the\': %s"%result5c)
 
 ### Uncomment to test exercise 6
-#result6 = ex5(result4,'the',['end'],True)
+def ex5(lm,word,context, verbose=False):
+    # Compute the probability for the word given the context
+    p = lm.prob(word, context)
+
+    # Return the probability
+    return p
+
+result6 = ex5(result4,'the',['end'],True)
+
+#####exercise 7 smoothing 
+
+#Try using an estimator which does do smoothing, and see what happens to all three of the bigram probabilities.
+# Try help(NgramModel) for help with the operation of this class and how to supply estimators.
+from nltk.probability import *
+
+def ex7(doc_name, n):
+    # Construct a list of lowercase words from the document
+    words = [w.lower() for w in gutenberg.words(doc_name)]
+
+    # Build the language model using the nltk.MLEProbDist estimator 
+    est = lambda fdist, bins: LaplaceProbDist(fdist)
+    lm = NgramModel(n,words, estimator = est)
+    
+    # Return the language model (we'll use it in exercise 5)
+    return lm
+
+def ex7p(lm,word,context):
+    # Compute the probability for the word given the context
+    p = lm.prob(word, context)
+
+    # Return the probability
+    return p
+
+result7 = ex7('austen-sense.txt',3)
+
+result7c = ex7p(result7,'the',['end'])
+
+###result shows that add-1 is not as good as MLE
+
+
+
+
+
+
+
+
+
+
+
+
+
