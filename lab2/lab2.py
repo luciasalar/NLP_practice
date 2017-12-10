@@ -29,7 +29,9 @@ def ex0(word,context):
     # (above doesn't include begin/end of corpus: but basically this is fine)
 
     # Compute probability of word given context. Make sure you use float division.
-    # p = ...
+    fdist = nltk.FreqDist(austen_bigrams)
+    fdist_uni = nltk.FreqDist(austen_words)
+    p = fdist[word,context]/float(fdist_uni[context])
 
     # Return probability
     return p
@@ -37,11 +39,41 @@ def ex0(word,context):
 
 # ### Uncomment to test exercise 0
 # print "MLE:"
-# result0a = ex0('end','the')
+result0a = ex0('end','the')
 # print "Probability of \'end\' given \'the\': " + str(result0a)
-# result0b = ex0('the','end')
+result0b = ex0('the','end')
 # print "Probability of \'the\' given \'end\': " + str(result0b)
 
+
+#################### EXERCISE 0 ####################
+
+# Solution for exercise 0
+# Input: word (string), context (string)
+# Output: p (float)
+# Compute the unsmoothed (MLE) probability for word given the single word context
+austen_words = [w.lower() for w in gutenberg.words('austen-sense.txt')]
+austen_bigrams = zip(austen_words[:-1], austen_words[1:])  # list of bigrams as tuples
+# (above doesn't include begin/end of corpus: but basically this is fine)
+
+# Compute probability of word given context. Make sure you use float division.
+fdist = nltk.FreqDist(austen_bigrams)
+fdist_uni = nltk.FreqDist(austen_words)
+def ex0_Nicky_is_Awesome(word,context):
+    global fdist, fdist_uni
+    p = fdist[word,context]/float(fdist_uni[context])
+    # Return probability
+    return p
+
+
+
+
+
+# ### Uncomment to test exercise 0
+# print "MLE:"
+result0a = ex0('end','the')
+# print "Probability of \'end\' given \'the\': " + str(result0a)
+result0b = ex0('the','end')
+# print "Probability of \'the\' given \'end\': " + str(result0b)
 
 #################### EXERCISE 1 ####################
 
@@ -57,10 +89,12 @@ def ex1(word,context):
     # (above doesn't include begin/end of corpus: but basically this is fine)
     
     # compute the vocabulary size
-    # V = ... 
+    V = len(set(austen_words)) 
 
     # Compute probability of word given context
-    #p = ...
+    fdist = nltk.FreqDist(austen_bigrams)
+    fdist_uni = nltk.FreqDist(austen_words)
+    p = (fdist[word,context]+1)/float((fdist_uni[context])+V)
 
     # Return probability
     return p
@@ -68,11 +102,10 @@ def ex1(word,context):
 
 ### Uncomment to test exercise 1
 # print "LAPLACE:"
-# result1a = ex1('end','the')
+result1a = ex1('end','the')
 # print "Probability of \'end\' given \'the\': " + str(result1a)
-# result1b = ex1('the','end')
+result1b = ex1('the','end')
 # print "Probability of \'the\' given \'end\': " + str(result1b)
-
 
 
 #################### EXERCISE 2 ####################
@@ -88,10 +121,12 @@ def ex2(word,context,alpha):
     austen_bigrams = zip(austen_words[:-1], austen_words[1:])  # list of bigrams as tuples
 
     # compute the vocabulary size
-    # V = ... 
+    V = len(set(austen_words)) 
 
     # Compute probability of word given context
-    #p = ...
+    fdist = nltk.FreqDist(austen_bigrams)
+    fdist_uni = nltk.FreqDist(austen_words)
+    p = (fdist[word,context]+alpha)/float((fdist_uni[context])+V)
 
     # Return probability
     return p
@@ -99,7 +134,7 @@ def ex2(word,context,alpha):
 
 ### Uncomment to test exercise 2
 # print "LIDSTONE, alpha=0.01:"
-# result2a = ex2('end','the',.01)
+result2a = ex2('end','the',.01)   
 # print "Probability of \'end\' given \'the\': " + str(result2a)
 # result2b = ex2('the','end',.01)
 # print "Probability of \'the\' given \'end\': " + str(result2b)
@@ -126,7 +161,7 @@ def ex3(word,context):
     austen_words = [w.lower() for w in gutenberg.words('austen-sense.txt')]
 
     # Train a bigram language model using a LAPLACE estimator AND BACKOFF
-    # lm = NgramModel(2,austen_words,estimator=lambda f,b: LaplaceProbDist(f,b+1))
+    lm = NgramModel(2,austen_words,estimator=lambda f,b: LaplaceProbDist(f,b+1))
     # b+1 is necessary to provide, as it were, a bin for unseen contexts,
     # so there is some probability left for the backoff probability, i.e. so
     # that alpha is > 0.
@@ -136,7 +171,7 @@ def ex3(word,context):
     # specifying its context.
     # To see messages about backoff in action, use the named argument
     # verbose = True.
-    # p = lm.prob(...)
+    p = lm.prob(word,context)
 
     # Return probability
     return p
@@ -144,12 +179,38 @@ def ex3(word,context):
 
 ### Uncomment to test exercise 3
 # print "BACKOFF WITH LAPLACE"
-# result3a = ex3('end','the')
+result3a = ex3('end','the')
 # print "Probability of \'end\' given \'the\': " + str(result3a)
-# result3b = ex3('the','end')
+result3b = ex3('the','end')
 # print "Probability of \'the\' given \'end\': " + str(result3b)
 
+####combine them into a class
+class BiGramMLE:
+    def __init__(self, corpora):
+        austen_words = [w.lower() for w in gutenberg.words(corpora)]
+        austen_bigrams = zip(austen_words[:-1], austen_words[1:])  # list of bigrams as tuples
+        # (above doesn't include begin/end of corpus: but basically this is fine)
+        # Compute probability of word given context. Make sure you use float division.
+        self.V = len(set(austen_words)) 
+        self.fdist = nltk.FreqDist(austen_bigrams)
+        self.fdist_uni = nltk.FreqDist(austen_words)
+        
+    def mle(self, word1, word2):
+        return self.fdist[word1,word2]/float(self.fdist_uni[word2])
 
+    def laplace(self,word1,word2):
+        return (self.fdist[word1,word2]+1)/float((self.fdist_uni[word2])+self.V)
+
+    def lidstone(self,word1,word2,alpha):
+        return (self.fdist[word1,word2]+alpha)/float((self.fdist_uni[word2])+self.V)
+
+    def language_model(self,word1,word2):
+        lm = NgramModel(3,austen_words,estimator=lambda f,b: LaplaceProbDist(f,b+1))
+        return lm.prob(word1,word2)
+
+
+mle_object = BiGramMLE('austen-sense.txt')
+mle_object.mle('the','end')
 #################### EXERCISE 4 ####################
 
 # Solution for exercise 4 - entropy calculation
@@ -159,10 +220,11 @@ def ex4_tot_entropy(lm,doc_name):
     e = 0.0
 
     # Construct a list of lowercase words from the document (test document)
-    #doc_words = ...
+    doc_words = [w.lower() for w in gutenberg.words(doc_name)]
 
    # Compute the TOTAL cross entropy of the text in doc_name
-    #e = ...
+
+    e = NgramModel.entropy(lm, doc_words)
 
     # Return the entropy
     return e
@@ -174,10 +236,10 @@ def ex4_perword_entropy(lm,doc_name):
     e = 0.0
 
     # Construct a list of lowercase words from the document (test document)
-    # doc_words = ...
+    doc_words = [w.lower() for w in gutenberg.words(doc_name)]
 
     # Compute the PER-WORD cross entropy of the text in doc_name
-    # e = ...
+    e = NgramModel.entropy(lm,doc_words)/len(doc_words)
 
     # Return the entropy
     return e
@@ -190,21 +252,21 @@ def ex4_lm(doc_name):
     l = None
 
     # Construct a list of lowercase words from the document (training data for lm)
-    #doc_words = ...
+    doc_words = [w.lower() for w in gutenberg.words(doc_name)]
 
     # Train a trigram language model using doc_words with backoff and a Lidstone probability distribution with +0.01 added to the sample count for each bin
-    #l = NgramModel(<order>,<training_data>,estimator=lambda f,b:nltk.LidstoneProbDist(f,0.01,f.B()+1))
+    l = NgramModel(3,doc_words,estimator=lambda f,b:nltk.LidstoneProbDist(f,0.01,f.B()+1))
 
     # Return the language model
     return l
 
 ### Uncomment to test exercise 4
-# lm4 = ex4_lm('austen-sense.txt')
-# result4a = ex4_tot_entropy(lm4,'austen-emma.txt')
+lm4 = ex4_lm('austen-sense.txt')
+result4a = ex4_tot_entropy(lm4,'austen-emma.txt')
 # print "Total cross-entropy for austen-emma.txt: " + str(result4a)
-# result4b = ex4_tot_entropy(lm4,'chesterton-ball.txt')
+result4b = ex4_tot_entropy(lm4,'chesterton-ball.txt')
 # print "Total cross-entropy for chesterton-ball.txt: " + str(result4b)
-# result4c = ex4_perword_entropy(lm4,'austen-emma.txt')
+result4c = ex4_perword_entropy(lm4,'austen-emma.txt')
 # print "Per-word cross-entropy for austen-emma.txt: " + str(result4c)
-# result4d = ex4_perword_entropy(lm4,'chesterton-ball.txt')
+result4d = ex4_perword_entropy(lm4,'chesterton-ball.txt')
 # print "Per-word cross-entropy for chesterton-ball.txt: " + str(result4d)

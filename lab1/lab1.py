@@ -83,7 +83,7 @@ from nltk.corpus import gutenberg
 # It has been removed from standard NLTK, so we access it in a special package installation
 import sys
 sys.path.extend(['/group/ltg/projects/fnlp', '/group/ltg/projects/fnlp/packages_2.6'])
-from nltk import NgramModel
+from nltkx import NgramModel
 from nltk import compat
 
 #################### EXERCISE 1 ####################
